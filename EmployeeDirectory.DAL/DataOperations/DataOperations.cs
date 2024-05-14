@@ -1,8 +1,7 @@
 ﻿using Newtonsoft.Json;
-using EmployeeDirectory.DAL.Contracts.ProviderInterfaces;
+using EmployeeDirectory.DAL.Contracts.Providers;
 using EmployeeDirectory.DAL.Exceptions;
 using EmployeeDirectory.DAL.Models;
-using System.Text.Json;
 namespace EmployeeDirectory.DAL.DataOperations
 {
     public class DataOperations : IDataProvider
@@ -22,7 +21,7 @@ namespace EmployeeDirectory.DAL.DataOperations
             }
         }
 
-        public static Dictionary<string, string[]> GetProjectDepartment()
+        public Dictionary<string, string[]> GetProjectDepartment()
         {
             try
             {

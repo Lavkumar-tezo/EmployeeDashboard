@@ -1,6 +1,5 @@
 ﻿using EmployeeDirectory.DAL.Contracts.Models;
 
-
 namespace EmployeeDirectory.DAL.Models
 {
     public class Employee : IEmployee

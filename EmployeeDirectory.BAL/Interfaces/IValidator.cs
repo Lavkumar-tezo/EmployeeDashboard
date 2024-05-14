@@ -1,7 +1,7 @@
 ﻿
 namespace EmployeeDirectory.BAL.Interfaces
 {
-    internal interface IValidator
+    public interface IValidator
     {
         bool ValidateEmployeeInputs(string mode, ref bool isAllInputCorrect);
 

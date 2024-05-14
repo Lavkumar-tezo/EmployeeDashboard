@@ -1,5 +1,4 @@
 ﻿using EmployeeDirectory.BAL.Interfaces;
-
 namespace EmployeeDirectory.BAL.DTO
 {
     public class Employee : IEmployee

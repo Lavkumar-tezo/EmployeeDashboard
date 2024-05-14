@@ -1,20 +1,15 @@
-﻿using EmployeeDirectory.DAL.DataOperations;
-using EmployeeDirectory.BAL.Interfaces;
-using System.Text.Json;
+﻿using EmployeeDirectory.BAL.Interfaces;
+using EmployeeDirectory.DAL.Models;
+using EmployeeDirectory.DAL.Contracts.Providers;
 namespace EmployeeDirectory.BAL.Providers
 {
-    public class RoleProvider : IRoleProvider, IComparer<DAL.Models.Role>
+    public class RoleProvider(IDataProvider data) : IRoleProvider, IComparer<Role>
     {
-        private readonly DataOperations _dataOperations;
-
-        public RoleProvider()
-        {
-            _dataOperations = new DataOperations();
-        }
+        private readonly IDataProvider _dataOperations = data;
 
         public void AddRole(Dictionary<string, string> inputs)
         {
-            DAL.Models.Role role = new()
+            Role role = new()
             {
                 Name = inputs["Name"],
                 Location = inputs["Location"],
@@ -25,14 +20,14 @@ namespace EmployeeDirectory.BAL.Providers
             _dataOperations.AddRole(role);
         }
 
-        private string GenerateRoleId()
+        public string GenerateRoleId()
         {
             try
             {
-                List<DAL.Models.Role> roles = _dataOperations.GetRoles();
+                List<Role> roles = _dataOperations.GetRoles();
                 roles.Sort(Compare);
                 string LastRoleId = roles[^1].Id ?? "";
-                int lastRoleNumber = int.Parse(LastRoleId.Substring(2));
+                int lastRoleNumber = int.Parse(LastRoleId[2..]);
                 lastRoleNumber++;
                 string newId = "IN" + lastRoleNumber.ToString("D3");
                 return newId;
@@ -47,7 +42,7 @@ namespace EmployeeDirectory.BAL.Providers
             }
         }
 
-        public int Compare(DAL.Models.Role? x, DAL.Models.Role? y)
+        public int Compare(Role? x, Role? y)
         {
             if (x != null && y != null)
             {
@@ -56,7 +51,7 @@ namespace EmployeeDirectory.BAL.Providers
             return 0;
         }
 
-        public List<DAL.Models.Role> GetRoles()
+        public List<Role> GetRoles()
         {
             try
             {

@@ -1,14 +1,11 @@
 ﻿using EmployeeDirectory.DAL.Models;
-namespace EmployeeDirectory.DAL.Contracts.ProviderInterfaces
+namespace EmployeeDirectory.DAL.Contracts.Providers
 {
-    internal interface IDataProvider
+    public interface IDataProvider
     {
         public List<Employee> GetEmployees();
 
-        public static Dictionary<string, string[]> GetProjectDepartment()
-        {
-            return [];
-        }
+        public Dictionary<string, string[]> GetProjectDepartment();
 
         public void AddEmployee(Employee newEmp);
 

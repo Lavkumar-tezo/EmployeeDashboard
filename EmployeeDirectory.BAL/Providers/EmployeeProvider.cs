@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
-using EmployeeDirectory.DAL.DataOperations;
-using EmployeeDirectory.DAL.Models;
+using EmployeeDirectory.DAL.Contracts.Providers;
 using EmployeeDirectory.DAL.Exceptions;
 using EmployeeDirectory.BAL.Interfaces;
 using EmployeeDirectory.BAL.Helper;
@@ -9,15 +8,12 @@ using Employee = EmployeeDirectory.DAL.Models.Employee;
 
 namespace EmployeeDirectory.BAL.Providers
 {
-    public class EmployeeProvider : IEmpProvider
+    public class EmployeeProvider(IDataProvider data, IGetProperty prop) : IEmpProvider
     {
-        private readonly DataOperations _dataOperations;
+        private readonly IDataProvider _dataOperations = data;
+        private readonly IGetProperty _getProperty = prop;
         private static int employeeIndex;
         private static string employeeId = "";
-        public EmployeeProvider()
-        {
-            _dataOperations = new DataOperations();
-        }
 
         public DTO.Employee AddValueToEmp(Dictionary<string, string> values, string mode)
         {
@@ -32,11 +28,11 @@ namespace EmployeeDirectory.BAL.Providers
                     JoinDate = joinDate,
                     Location = values["Location"],
                     JobTitle = values["JobTitle"],
-                    Department = values["Department"]
+                    Department = values["Department"],
+                    Manager = values["Manager"],
+                    Mobile = values["Mobile"],
+                    Project = values["Project"]
                 };
-                newEmp.Manager = values["Manager"];
-                newEmp.Mobile = values["Mobile"];
-                newEmp.Project = values["Project"];
                 DateOnly dob = ConvertIntoDate(values["DOB"]);
                 if (dob != DateOnly.MinValue)
                 {
@@ -50,7 +46,7 @@ namespace EmployeeDirectory.BAL.Providers
                 if (check)
                 {
                     DateOnly dob = ConvertIntoDate(values["JoinDate"]);
-                    DTO.Employee updateEmp = new DTO.Employee()
+                    DTO.Employee updateEmp = new()
                     {
                         FirstName = (values["FirstName"].IsEmpty()) ? emp.FirstName : values["FirstName"],
                         LastName = (values["LastName"].IsEmpty()) ? emp.LastName : values["LastName"],
@@ -76,7 +72,7 @@ namespace EmployeeDirectory.BAL.Providers
             }
         }
 
-        private static DateOnly ConvertIntoDate(string input)
+        public DateOnly ConvertIntoDate(string input)
         {
             if (DateOnly.TryParseExact(input, "dd/MM/yyyy", null, DateTimeStyles.None, out DateOnly result))
             {
@@ -85,7 +81,7 @@ namespace EmployeeDirectory.BAL.Providers
             return DateOnly.MinValue;
         }
 
-        private Employee AssignValueToModel(DTO.Employee emp)
+        public Employee AssignValueToModel(DTO.Employee emp)
         {
             if (employeeId.IsEmpty())
             {
@@ -166,7 +162,7 @@ namespace EmployeeDirectory.BAL.Providers
                 (bool check, dynamic employee) = GetEmployeeById(id);
                 if (check)
                 {
-                    MessagesInputStore.inputFieldValues = GetProperty.GetValueFromObject(employee);
+                    MessagesInputStore.inputFieldValues = _getProperty.GetValueFromObject(employee);
                 }
                 return check;
             }
@@ -221,7 +217,7 @@ namespace EmployeeDirectory.BAL.Providers
 
         }
 
-        private string GenerateEmpId()
+        public string GenerateEmpId()
         {
             try
             {

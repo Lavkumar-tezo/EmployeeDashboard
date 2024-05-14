@@ -10,11 +10,13 @@ namespace EmployeeDirectory.BAL.Validators
 {
     public class Validator : IValidator
     {
-        private readonly BAL.Providers.EmployeeProvider _employee;
+        private readonly IEmpProvider _employee;
+        private readonly IGetProjectDeptList _getProjectDeptList;
 
-        public Validator()
+        public Validator(IEmpProvider emp, IGetProjectDeptList dept)
         {
-            _employee = new BAL.Providers.EmployeeProvider();
+            _employee = emp;
+            _getProjectDeptList= dept;
         }
 
         private static bool ValidateEmail(string value, string key)
@@ -237,11 +239,11 @@ namespace EmployeeDirectory.BAL.Validators
                     }
                     else if (input.Key.Equals("Department"))
                     {
-                        isAllValid = ValidateInput(input.Key, input.Value, () => GetProjectDeptList.GetStaticData("Department")) && isAllValid;
+                        isAllValid = ValidateInput(input.Key, input.Value, () => _getProjectDeptList.GetStaticData("Department")) && isAllValid;
                     }
                     else if (input.Key.Equals("Project"))
                     {
-                        isAllValid = ValidateInput(input.Key, input.Value, () => GetProjectDeptList.GetStaticData("Project")) && isAllValid;
+                        isAllValid = ValidateInput(input.Key, input.Value, () => _getProjectDeptList.GetStaticData("Project")) && isAllValid;
                     }
                     else if (input.Key.Equals("Mobile"))
                     {
@@ -290,7 +292,7 @@ namespace EmployeeDirectory.BAL.Validators
                     }
                     else if (input.Key.Equals("Department"))
                     {
-                        isAllValid = ValidateInput(input.Key, input.Value, () => GetProjectDeptList.GetStaticData("Department")) && isAllValid;
+                        isAllValid = ValidateInput(input.Key, input.Value, () => _getProjectDeptList.GetStaticData("Department")) && isAllValid;
                     }
                 }
             }
