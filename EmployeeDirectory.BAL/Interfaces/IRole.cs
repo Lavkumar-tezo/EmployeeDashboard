@@ -1,7 +1,7 @@
 ﻿
 namespace EmployeeDirectory.BAL.Interfaces
 {
-    internal interface IRole
+    public interface IRole
     {
         public string Name { get; set; }
 

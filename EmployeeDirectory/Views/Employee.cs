@@ -1,21 +1,15 @@
 ﻿using EmployeeDirectory.BAL.Extension;
 using EmployeeDirectory.BAL.Helper;
-using EmployeeDirectory.BAL.Providers;
 using EmployeeDirectory.Helpers;
-using EmployeeDirectory.BAL.DTO;
-using EmployeeDirectory.BAL.Validators;
+using EmployeeDirectory.BAL.Interfaces;
+using EmployeeDirectory.BAL.Interfaces.Views;
 namespace EmployeeDirectory.Views
 {
-    internal class Employee
+    internal class Employee(IValidator validator, IEmpProvider emp, IGetProperty prop) : IEmployeeView
     {
-        private readonly Validator _validator;
-        private readonly EmployeeProvider _employee;
-
-        public Employee()
-        {
-            _validator = new();
-            _employee = new();
-        }
+        private readonly IValidator _validator = validator;
+        private readonly IEmpProvider _employee = emp;
+        private readonly IGetProperty _getProperty = prop;
 
         public void ShowEmployeeMenu()
         {
@@ -61,9 +55,9 @@ namespace EmployeeDirectory.Views
         /// </summary>
         /// <param name="mode"></param>
         /// <returns>return employee object</returns>
-        private EmployeeDirectory.BAL.DTO.Employee TakeInput(string mode)
+        public BAL.DTO.Employee TakeInput(string mode)
         {
-            List<string> inputFields = GetProperty.GetProperties("Employee");
+            List<string> inputFields = _getProperty.GetProperties("Employee");
             bool isAllInputCorrect = true;
             do
             {
@@ -92,7 +86,7 @@ namespace EmployeeDirectory.Views
             return emp;
         }
 
-        private void AddEmployee()
+        public void AddEmployee()
         {
             try
             {
@@ -113,7 +107,7 @@ namespace EmployeeDirectory.Views
 
         }
 
-        private void EditEmployee()
+        public void EditEmployee()
         {
             try
             {
@@ -138,7 +132,7 @@ namespace EmployeeDirectory.Views
             }
 
         }
-        private void DisplayEmployeeList()
+        public void DisplayEmployeeList()
         {
             try
             {
@@ -162,12 +156,12 @@ namespace EmployeeDirectory.Views
 
         }
 
-        private static void DisplayEmployee(DAL.Models.Employee emp)
+        public void DisplayEmployee(DAL.Models.Employee emp)
         {
-            Printer.Print(true, $"Emp Id: {emp.Id} -- Full Name: {emp.FirstName} {emp.LastName} -- Role: {emp.JobTitle} --  DepartMent: {emp.Department} -- Location: {emp.Location} -- JoiningDate: {emp.JoinDate} -- Manager: {emp.Manager} -- Project: {emp.Project}");
+            Printer.Print(true, $"Emp Id: {emp.Id} -- Full Name: {emp.FirstName} {emp.LastName} -- Role: {emp.JobTitle} --  Department: {emp.Department} -- Location: {emp.Location} -- JoiningDate: {emp.JoinDate} -- Manager: {emp.Manager} -- Project: {emp.Project}");
         }
 
-        private void DisplaySelectedEmp()
+        public void DisplaySelectedEmp()
         {
             Printer.Print(false, "Enter the Id of employee: ");
             string inputId = Console.ReadLine() ?? "";
@@ -192,7 +186,7 @@ namespace EmployeeDirectory.Views
             }
         }
 
-        private void DeleteEmployee()
+        public void DeleteEmployee()
         {
             try
             {

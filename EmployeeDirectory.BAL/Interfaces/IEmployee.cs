@@ -1,6 +1,6 @@
 ﻿namespace EmployeeDirectory.BAL.Interfaces
 {
-    internal interface IEmployee
+    public interface IEmployee
     {
         public string FirstName { get; set; }
 

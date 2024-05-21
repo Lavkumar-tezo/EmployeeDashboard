@@ -1,20 +1,15 @@
-﻿using EmployeeDirectory.BAL.Providers;
-using EmployeeDirectory.BAL.Validators;
-using EmployeeDirectory.Helpers;
+﻿using EmployeeDirectory.Helpers;
 using System.Text.Json;
 using EmployeeDirectory.BAL.Helper;
+using EmployeeDirectory.BAL.Interfaces.Views;
+using EmployeeDirectory.BAL.Interfaces;
 namespace EmployeeDirectory.Views
 {
-    public class Role
+    public class Role(IValidator validator, IRoleProvider role, IGetProperty prop) : IRoleView
     {
-        private readonly Validator _validator;
-        private readonly BAL.Providers.RoleProvider _roleProvider;
-
-        public Role()
-        {
-            _validator = new Validator();
-            _roleProvider = new BAL.Providers.RoleProvider();
-        }
+        private readonly IValidator _validator = validator;
+        private readonly IRoleProvider _roleProvider = role;
+        private readonly IGetProperty _getProperty = prop;
 
         public void ShowRoleMenu()
         {
@@ -47,11 +42,11 @@ namespace EmployeeDirectory.Views
             }
         }
 
-        private void AddRole()
+        public void AddRole()
         {
             try
             {
-                List<string> inputFields = GetProperty.GetProperties("Role");
+                List<string> inputFields = _getProperty.GetProperties("Role");
                 bool isAllInputCorrect = true;
 
                 Printer.Print(true, "Enter the details of New Role (* represents required fields)");
@@ -86,7 +81,7 @@ namespace EmployeeDirectory.Views
 
         }
 
-        private void DisplayRoleList()
+        public void DisplayRoleList()
         {
             try
             {
@@ -110,7 +105,7 @@ namespace EmployeeDirectory.Views
 
         }
 
-        private void DisplayRole(DAL.Models.Role role)
+        public void DisplayRole(DAL.Models.Role role)
         {
             Console.WriteLine($"Name: {role.Name} -- Department: {role.Department} -- Location: {role.Location} -- Description: {role.Description}");
         }

@@ -1,50 +1,23 @@
 ﻿using System.Reflection;
 using EmployeeDirectory.BAL.DTO;
+using EmployeeDirectory.BAL.Interfaces;
 namespace EmployeeDirectory.BAL.Providers
 {
-    public class GetProperty
+    public class GetProperty:IGetProperty
     {
-        public static List<string> GetProperties(string className)
+        public List<string> GetProperties(string className)
         {
-            var propertiesList = new List<string>();
-            Type type;
-
             if (className.Equals("Employee"))
             {
-                Employee newEmp = new()
-                {
-                    FirstName = "",
-                    LastName = "",
-                    Email = "",
-                    JoinDate = DateOnly.MinValue,
-                    Location = "",
-                    JobTitle = "",
-                    Department = ""
-                };
-                type = newEmp.GetType();
+                return typeof(Employee).GetProperties().Select(prop => prop.Name).ToList();
             }
             else
             {
-                DTO.Role newRole = new()
-                {
-                    Name = "",
-                    Department = "",
-                    Location = ""
-                };
-                type = newRole.GetType();
+                return typeof(Employee).GetProperties().Select(prop => prop.Name).ToList();
             }
-            PropertyInfo[] properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
-            foreach (PropertyInfo property in properties)
-            {
-                if (property.GetIndexParameters().Length == 0)
-                {
-                    propertiesList.Add(property.Name);
-                }
-            }
-            return propertiesList;
         }
 
-        public static Dictionary<string, string> GetValueFromObject<T>(T obj)
+        public Dictionary<string, string> GetValueFromObject<T>(T obj)
         {
             var objectKeyValues = new Dictionary<string, string>();
 
